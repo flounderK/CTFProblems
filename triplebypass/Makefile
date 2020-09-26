@@ -1,0 +1,3 @@
+
+all:
+	ghc test.hs
