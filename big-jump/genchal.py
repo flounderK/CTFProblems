@@ -35,6 +35,11 @@ for i, c in code_chunks:
     prev_suffix = ' '*4 + 'jmp %s\n' % label
     cleaned_chunk = re.sub('SYS_write', str(constants.SYS_write.real), c)
     cleaned_chunk = re.sub('ptr', '', cleaned_chunk)
+    xor_match = re.search(r'(0x[a-fA-F0-9]+) \^ (0x[a-fA-F0-9]+)', cleaned_chunk)
+    if xor_match is not None:
+        a, b = xor_match.groups()
+        c = int(a, 16) ^ int(b, 16)
+        cleaned_chunk = re.sub(re.escape(xor_match[0]), hex(c), cleaned_chunk)
     if i == len(code_chunks) - 1:
         cleaned_chunk += 'jmp end'
     final_chunks.append(label + ':\n' + cleaned_chunk)
