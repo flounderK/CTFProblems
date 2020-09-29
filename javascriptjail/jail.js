@@ -7,7 +7,7 @@ const rl = readline.createInterface({
 	output: process.stdout
 });
 rl.question('> ', (answer) => {
-	var blah = eval((function (st){ return st.replace(/[^![\]\(\)!+-]/g, ''); })(answer));
+	var blah = eval((function (st){ return st.replace(/[^![\]\(\)!-]/g, ''); })(answer));
 	if (blah == "Let me out"){
 		fs.readFile("flag.txt", 'utf8', function(err, data) {
 			if (err) throw err;
