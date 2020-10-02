@@ -1,11 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 
 void store_a_charstar();
 void menu();
 void store_floats();
 void hint();
+int float_hoard_max = 400;
 float FLOAT_HOARD[400];
 int key1 = 0;
 int key2 = 0;
@@ -13,10 +16,11 @@ int key3 = 0;
 int floatcount = 0;
 
 void setup() {
-    FILE* f = fopen("flag.txt", "rt");
-    char c = fgetc(f);
-    printf("%c", c);
-    fclose(f);
+    //FILE* f = fopen("flag.txt", "rt");
+    //char c = fgetc(f);
+    //c = '\n';
+    //fputc(c, stdout);
+    //fclose(f);
 
     setvbuf(stdin, 0, _IONBF, 0);
     setvbuf(stdout, 0, _IONBF, 0);
@@ -24,11 +28,15 @@ void setup() {
 
 int main(int argc, char **argv) {
     setup();
+    char* inp[8];
     int selection;
+
     for (;;) {
-        menu();
         fflush(stdin);
-        scanf("%d", &selection);
+        menu();
+        //scanf("%d", &selection);
+        read(0, &inp, 4);
+        selection = atoi((char*)&inp);
         switch (selection){
             case 1:
                 store_floats();
@@ -42,8 +50,8 @@ int main(int argc, char **argv) {
                 hint();
                 break;
             default:
-                puts("That wasn't quite valid. Try again. ");
-                break;
+                puts("Invalid option. What will become of your magnificent float hoard?");
+                exit(1);
         }
     }
 }
@@ -52,22 +60,24 @@ void hint() {
     puts("Ooo you found the secret hint!");
     puts("Did you know that scanf can consider non numeric characters to be a part of a float?");
 }
-
 void win() {
-	FILE *f;
-	char c;
-    f = fopen("flag.txt", "rt");
+    char flagbuf[64];
+    int f;
+	int c;
+    f = open("flag.txt", O_RDONLY);
     if (key1 != 27000 && key2 != 0xbadf00d && key3 != 0x1337){
-        fclose(f);
+        close(f);
         exit(1);
     }
-    while ( (c = fgetc(f)) != EOF ) {
-        printf("%c", c);
-        fflush(stdout);
+    if (f == 0x0){
+        close(f);
+        exit(1);
     }
-    fclose(f);
-}
+    read(f, &flagbuf, 0x40);
+    printf(flagbuf);
 
+    close(f);
+}
 void set_key1() {
     if (key3 != 0)
         key1 = 27000;
@@ -98,11 +108,12 @@ void menu() {
 }
 
 void store_a_charstar() {
+    fflush(stdout);
     char s[8];
     puts("Give me the char * ");
     printf(" (string)> ");
-	fgets(s, 24, stdin);
-    fflush(stdin);
+	//fgets(s, 24, stdin);
+    read(0, &s, 24);
 }
 
 void store_floats() {
