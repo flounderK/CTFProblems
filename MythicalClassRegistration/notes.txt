@@ -1,0 +1,1 @@
+Closed source challenge. Providing a copy of the version of libc.so and ld.so is also a good idea.

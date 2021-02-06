@@ -108,8 +108,9 @@ int main(int argc, char ** argv)
 {
     setvbuf(stdin, 0LL, 2, 0LL);
     setvbuf(stdout, 0LL, 2, 0LL);
-
-
+    puts("Welcome to the Mythical class-registration system closed beta trial.");
+    puts("Please report any issues with registering for classes.");
+    puts("Please ignore any and all crashes of the client (WILL NOT FIX).");
     do
     {
         int a = 0;
