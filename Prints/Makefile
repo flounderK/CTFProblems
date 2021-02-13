@@ -1,19 +1,20 @@
 C=gcc
 CFLAGS=-m64 -g -no-pie -z norelro
 
-all: challenge.zip server.zip
+.PHONY: all binary clean
 
-challenge.zip:
-	$(CC) $(CFLAGS) -o prints prints.c &&\
-    zip challenge.zip prints &&\
-    rm prints
+all: binary challenge.zip server.zip
 
-server.zip:
-	$(CC) $(CFLAGS) -o prints prints.c &&\
-    zip server.zip prints flag.txt &&\
-    rm prints &&\
+binary:
+	$(CC) $(CFLAGS) -o prints prints.c
+
+challenge.zip: binary
+	zip challenge.zip prints
+
+server.zip: binary
+	zip server.zip prints flag.txt &&\
     echo prints > requires-server
 
 clean:
-	rm challenge.zip server.zip requires-server
+	rm -f prints challenge.zip server.zip requires-server
 
