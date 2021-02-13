@@ -5,7 +5,7 @@ all: binary challenge.zip server.zip
 
 binary:
 	$(CC) $(CFLAGS) -o easy_rop easy_rop.c
-	
+
 challenge.zip: binary
 	zip challenge.zip easy_rop libc*.so
 
@@ -14,5 +14,5 @@ server.zip: binary
     zip server.zip easy_rop flag.txt requires-server
 
 clean:
-	rm challenge.zip server.zip requires-server easy_rop
+	rm -rf challenge.zip server.zip requires-server easy_rop
 
