@@ -13,6 +13,6 @@ build:
 	# go build magicalbillygoat.go
 
 clean:
-	rm -f *.o $(BINARYNAME) 2>/dev/null
+	rm -f *.o $(BINARYNAME) chow.down 2>/dev/null
 
 
