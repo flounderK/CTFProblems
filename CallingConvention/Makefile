@@ -1,19 +1,20 @@
 C=gcc
 CFLAGS=-m64 -g -fno-stack-protector -no-pie -z norelro
 
-all: challenge.zip server.zip
+.PHONY: binary
 
-challenge.zip:
-	$(CC) $(CFLAGS) -o calling_convention calling_convention.c &&\
-    zip challenge.zip calling_convention &&\
-    rm calling_convention
+all: binary challenge.zip server.zip
 
-server.zip:
-	$(CC) $(CFLAGS) -o calling_convention calling_convention.c &&\
-    zip server.zip calling_convention flag.txt &&\
-    rm calling_convention &&\
+binary:
+	$(CC) $(CFLAGS) -o calling_convention calling_convention.c
+
+challenge.zip: binary
+	zip challenge.zip calling_convention
+
+server.zip: binary
+	zip server.zip calling_convention flag.txt &&\
     echo calling_convention > requires-server
 
 clean:
-	rm challenge.zip server.zip requires-server
+	rm -rf calling_convention challenge.zip server.zip requires-server
 
