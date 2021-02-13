@@ -12,8 +12,8 @@ challenge.zip: binary
 	zip challenge.zip calling_convention
 
 server.zip: binary
-	zip server.zip calling_convention flag.txt &&\
-    echo calling_convention > requires-server
+	echo calling_convention > requires-server
+	zip server.zip calling_convention flag.txt requires-server
 
 clean:
 	rm -rf calling_convention challenge.zip server.zip requires-server

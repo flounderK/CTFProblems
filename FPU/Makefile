@@ -12,8 +12,8 @@ challenge.zip: binary
 	zip challenge.zip floating_point_dungeon
 
 server.zip: binary
-	zip server.zip floating_point_dungeon flag.txt &&\
 	echo floating_point_dungeon > requires-server
+	zip server.zip floating_point_dungeon flag.txt requires-server
 
 clean:
 	rm -rf floating_point_dungeon challenge.zip server.zip requires-server

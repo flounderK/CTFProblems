@@ -12,8 +12,8 @@ challenge.zip: binary
 	zip challenge.zip prints
 
 server.zip: binary
-	zip server.zip prints flag.txt &&\
-    echo prints > requires-server
+	echo prints > requires-server
+	zip server.zip prints requires-server flag.txt
 
 clean:
 	rm -f prints challenge.zip server.zip requires-server
