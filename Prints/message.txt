@@ -1,3 +1,1 @@
-You've almost got a good grasp on this. Time to think psat your function variables.
-
-Make Mudge proud
+As it turns out, width specifiers can be much more useful than anyone ever imagined

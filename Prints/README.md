@@ -1,0 +1,1 @@
+This challenge has different solutions depending on the version of libc that is used. The more obvious, easy one is to overwrite the got entry for something. If libc is below ~2.31 however, the value of \__malloc_hook can be overwritten with the value of "onegadget", because malloc can be triggered by printf on libc before that version.
