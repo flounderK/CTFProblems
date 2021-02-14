@@ -10,7 +10,7 @@ challenge.zip: binary
 	zip challenge.zip easy_rop libc*.so
 
 server.zip: binary
-	echo easy_rop > requires-server &&\
+	echo './easy_rop' > requires-server &&\
     zip server.zip easy_rop flag.txt requires-server
 
 clean:
