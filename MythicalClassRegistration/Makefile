@@ -17,7 +17,7 @@ clean:
 	rm -f $(BINARYNAME) *.o requires-server challenge.zip server.zip 2>/dev/null
 
 server.zip: binary
-	echo $(BINARYNAME) > requires-server &&\
+	echo "./$(BINARYNAME)" > requires-server &&\
 	zip server.zip $(BINARYNAME) flag.txt requires-server
 
 challenge.zip: binary
