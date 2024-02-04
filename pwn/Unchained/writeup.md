@@ -11,7 +11,7 @@ Finding the base address of `glibc` can be done in the same way by OOB reading a
 
 At this point there is technically enough information to get code execution because the binary has `RELRO` turned off, so by writing a pointer to any executable location into a GOT entry for an unresolved symbol that code will be executed instead of resolving the symbol. I chose to go a different route however.
 
-I decided to leak the address of the stack by using the arbitrary read to read the pointer `environ` out of `glibc`, which points to a location past the first stack frame. Then I walked down the stack to find the return address that `vuln` would use return to `main`.  I wrote a ropchain to call `system("/bin/sh\x00")` there to get a shell. 
+I decided to leak the address of the stack by using the arbitrary read to read the pointer `environ` out of `glibc`, which points to a location past the first stack frame. Then I walked down the stack to find the return address that `vuln` would use return to `main`.  I wrote a ropchain to call `system("/bin/sh\x00")` there, which was executed when sending the exit option to the challenge.
 
 ## Solve Script
 ```python
