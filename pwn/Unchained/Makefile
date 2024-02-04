@@ -18,10 +18,13 @@ NO_RELRO=-Wl,-z,norelro
 
 CDEBUG=-g -O0
 CFLAGS=-Iinclude -Isrc
-LDFLAGS=$(NO_RELRO)
+LDFLAGS=
 
 
 BINARY=main
+
+BIN_UNTETHERED=untethered
+BIN_UNCHAINED=unchained
 
 BUILD_DIR=build
 DEBUG_DIR=debug
@@ -46,26 +49,48 @@ $(OBJ)/$(RELEASE_DIR)/%.o: %.c
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-# currently unused target
-$(OBJ)/%.o: %.c
+$(OBJ)/$(DEBUG_DIR)/src/unchained.o: LDFLAGS += $(NO_RELRO)
+$(OBJ)/$(DEBUG_DIR)/src/unchained.o: CFLAGS += $(CDEBUG)
+$(OBJ)/$(DEBUG_DIR)/src/unchained.o: src/main.c
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-# old unused target
-$(BINARY): $(OBJECT_FILES)
-	$(CC)  -o $@ $^ $(CFLAGS) $(LDFLAGS)
+$(OBJ)/$(DEBUG_DIR)/src/untethered.o: CFLAGS += $(CDEBUG)
+$(OBJ)/$(DEBUG_DIR)/src/untethered.o: src/main.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-$(OBJ)/$(DEBUG_DIR)/$(BINARY): $(DBG_OBJECT_FILES)
+$(OBJ)/$(RELEASE_DIR)/src/unchained.o: src/main.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJ)/$(RELEASE_DIR)/src/untethered.o: src/main.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+
+$(OBJ)/$(DEBUG_DIR)/$(BIN_UNCHAINED): LDFLAGS += $(NO_RELRO)
+$(OBJ)/$(DEBUG_DIR)/$(BIN_UNCHAINED): $(OBJ)/$(DEBUG_DIR)/src/unchained.o
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) $(CDEBUG) -o $@ $^ $(LDFLAGS)
 
-debug: $(OBJ)/$(DEBUG_DIR)/$(BINARY)
-
-$(OBJ)/$(RELEASE_DIR)/$(BINARY): $(RELEASE_OBJECT_FILES)
+$(OBJ)/$(DEBUG_DIR)/$(BIN_UNTETHERED): $(OBJ)/$(DEBUG_DIR)/src/untethered.o
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-release: $(OBJ)/$(RELEASE_DIR)/$(BINARY)
+debug: $(OBJ)/$(DEBUG_DIR)/$(BIN_UNCHAINED) $(OBJ)/$(DEBUG_DIR)/$(BIN_UNTETHERED)
+
+
+$(OBJ)/$(RELEASE_DIR)/$(BIN_UNCHAINED): LDFLAGS += $(NO_RELRO)
+$(OBJ)/$(RELEASE_DIR)/$(BIN_UNCHAINED): $(OBJ)/$(RELEASE_DIR)/src/unchained.o
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+$(OBJ)/$(RELEASE_DIR)/$(BIN_UNTETHERED): $(OBJ)/$(RELEASE_DIR)/src/untethered.o
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+release: $(OBJ)/$(RELEASE_DIR)/$(BIN_UNCHAINED) $(OBJ)/$(RELEASE_DIR)/$(BIN_UNTETHERED)
 
 clean:
 	rm -rf $(OBJ) 2>/dev/null
