@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
 
 void setup() {
     setvbuf(stdin, 0, _IONBF, 0);
@@ -11,14 +12,15 @@ void setup() {
 
 int main(int argc, char **argv) {
     setup();
-    char s[20];
+    char s[48];
     for (;;) {
         memset(s, 0, sizeof s);
         puts("Print something special");
         printf(" > ");
-        read(0, &s, 19);
+        read(0, &s, sizeof s);
         printf(s);
         s[0] = 0;
     }
+    return 0;
 }
 
