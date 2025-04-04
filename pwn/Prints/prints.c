@@ -18,6 +18,9 @@ int main(int argc, char **argv) {
         puts("Print something special");
         printf(" > ");
         read(0, &s, sizeof s);
+        if (strncmp(s, "quit", sizeof("quit")-1) == 0) {
+            break;
+        }
         printf(s);
         s[0] = 0;
     }
