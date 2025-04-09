@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS= -g -fno-stack-protector -m64 -Wall -no-pie
+CFLAGS+= -g -fno-stack-protector -m64 -Wall -no-pie
 
 all: binary challenge.zip server.zip
 

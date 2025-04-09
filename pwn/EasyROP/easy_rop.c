@@ -14,7 +14,7 @@ int main(){
 
 void vuln(void){
     char buf [32];
-    memset(buf, 0, 64);
+    memset(buf, 0, sizeof(buf));
     fgets(buf, 0x100, stdin);
     return;
 }

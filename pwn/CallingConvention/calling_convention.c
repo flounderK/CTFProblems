@@ -4,16 +4,16 @@
 #include <fcntl.h>
 
 
-void store_a_charstar();
-void menu();
-void vuln();
-void store_floats();
+void store_a_charstar(void);
+void menu(void);
+void vuln(void);
+void store_floats(void);
 int key1 = 0;
 int key2 = 0;
 int key3 = 0;
 int floatcount = 0;
 
-void setup() {
+void setup(void) {
     setvbuf(stdin, 0, _IONBF, 0);
     setvbuf(stdout, 0, _IONBF, 0);
     setvbuf(stderr, 0, _IONBF, 0);
@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
     vuln();
 }
 
-void win() {
+void win(void) {
     FILE *f;
     char c;
     f = fopen("flag.txt", "rt");
@@ -41,33 +41,33 @@ void win() {
     fclose(f);
 
 }
-void set_key1() {
+void set_key1(void) {
     if (key3 != 0)
         key1 = 27000;
 }
 
-void ahhhhhhhh() {
+void ahhhhhhhh(void) {
     if (key1 == 0)
         return;
     key3 = 0;
     key2 = key2 + 0xbad0000;
 }
 
-void food() {
+void food(void) {
     key2 = key2 + 0xf00d;
 }
 
-void number3() {
+void number3(void) {
     key3 = 0x1337;
 }
 
-void menu() {
+void menu(void) {
     puts("Try out this new calling convention!");
     puts("Instead of pushing things onto the stack you just pop them on!");
     printf(" > ");
 }
 
-void vuln() {
+void vuln(void) {
     fflush(stdout);
     char s[8];
 	fgets(s, 0x200, stdin);

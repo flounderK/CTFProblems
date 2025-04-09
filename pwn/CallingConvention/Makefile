@@ -1,5 +1,5 @@
 C=gcc
-CFLAGS=-m64 -g -fno-stack-protector -no-pie -z norelro
+CFLAGS+=-m64 -g -fno-stack-protector -no-pie -z norelro
 
 .PHONY: all binary clean
 

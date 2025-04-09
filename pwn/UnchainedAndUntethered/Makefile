@@ -17,8 +17,8 @@ endif
 NO_RELRO=-Wl,-z,norelro
 
 CDEBUG=-g -O0
-CFLAGS=-Iinclude -Isrc
-LDFLAGS=
+CFLAGS+=-Iinclude -Isrc
+LDFLAGS+=
 
 
 BINARY=main
