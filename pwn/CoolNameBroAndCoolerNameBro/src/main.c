@@ -161,6 +161,7 @@ void handle_add_contact(void) {
     memset(contact->name, 0, contact->name_length);
     printf("enter contact name: \n");
     read(0, contact->name, contact->name_length);
+    g_contact_list[index] = contact;
 
 exit:
     return;
