@@ -28,9 +28,17 @@ mkdir -p inputs
 
 printf "16\nAAAAAAAAAAAAAAAA\n8\n" > inputs/a
 
+# early crashes from asan
 # afl-fuzz -i ./inputs -o ./outputs -c ./cool_name_bro.cmplog -w ./cool_name_bro.asan -w ./cool_name_bro.ubsan -- ./cool_name_bro.bb
+
+# crashes from memory corruption
 # afl-fuzz -i ./inputs -o ./outputs -c ./cool_name_bro.cmplog -- ./cool_name_bro.bb
 
+# analyze with cmplog to identify critical paths for triggering crash
+# afl-analyze -i san_outputs/default/crashes/id:000022,sig:06,src:000043,time:246727,execs:29630,op:havoc,rep:12 -- ./cool_name_bro.cmplog
+
+# generate lcov web report showing code coverage of source code
 # afl-cov -d outputs --coverage-cmd "./cool_name_bro.gcov" --overwrite --code-dir .
 
+# show all of the different crash locations and detected crash types that asan finds
 # for i in $(find outputs/default/crashes -type f ); do ./cool_name_bro.asan < $i 2>&1; done | grep 'at pc'
