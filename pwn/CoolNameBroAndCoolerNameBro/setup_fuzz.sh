@@ -29,6 +29,7 @@ mkdir -p inputs
 printf "16\nAAAAAAAAAAAAAAAA\n8\n" > inputs/a
 
 # afl-fuzz -i ./inputs -o ./outputs -c ./cool_name_bro.cmplog -w ./cool_name_bro.asan -w ./cool_name_bro.ubsan -- ./cool_name_bro.bb
+# afl-fuzz -i ./inputs -o ./outputs -c ./cool_name_bro.cmplog -- ./cool_name_bro.bb
 
 # afl-cov -d outputs --coverage-cmd "./cool_name_bro.gcov" --overwrite --code-dir .
 
