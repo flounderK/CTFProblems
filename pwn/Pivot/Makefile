@@ -1,15 +1,13 @@
 CC = gcc
 CFLAGS+= -g -fno-stack-protector -m64 -Wall -no-pie
+
 BINARY=pivot
 
 all: $(BINARY)
 
-%.o: %.c
-	$(CC) $(CFLAGS) -o $@ -c $<
-
-$(BINARY): pivot.o
+$(BINARY): pivot.c
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
-	rm -rf $(BINARY) *.o
+	rm -rf pivot
 

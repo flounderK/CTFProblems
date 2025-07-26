@@ -1,30 +1,25 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
-#include <unistd.h>
 #include <stdlib.h>
-#include <syscall.h>
-
+#include <unistd.h>
+#include <sys/mman.h>
 
 void vuln(void);
 
-void setup_unbuffered(void) {
-    // don't buffer inputs in the heap
-    setvbuf(stdin, NULL, _IONBF, 0);
-    setvbuf(stdout, NULL, _IONBF, 0);
-    setvbuf(stderr, NULL, _IONBF, 0);
-    return;
-}
+void* g_buf = NULL;
 
+#define PIVOT_BUF_SIZE 4000
 
 int main(){
-    setup_unbuffered();
-    puts("Let me see you pivot");
+    setvbuf(stdin, 0LL, 2, 0LL);
+    setvbuf(stdout, 0LL, 2, 0LL);
     fflush(stdout);
-    void* pivotbuf = malloc(0xa000);
-    if (pivotbuf == NULL) {
-        return 1;
-    }
-    printf("A gift %p\n", pivotbuf);
+    puts("welcome to the pivot dojo\n");
+    g_buf = mmap(NULL, 0x10000, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);//malloc(PIVOT_BUF_SIZE);
+    g_buf = (void*)((size_t)g_buf+0x8000);
+    printf("A gift: %p\n", g_buf);
+    read(0, g_buf, PIVOT_BUF_SIZE);
     vuln();
     return 0;
 }
@@ -32,7 +27,8 @@ int main(){
 void vuln(void){
     char buf [32];
     memset(buf, 0, sizeof(buf));
-    read(0, buf, sizeof(buf)+(sizeof(void*)*2));
+    printf("give me your message: ");
+    read(0, buf, 48);
     return;
 }
 

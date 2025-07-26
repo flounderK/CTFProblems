@@ -1,20 +1,18 @@
-C=gcc
-CFLAGS=-m64 -g -no-pie -z norelro
+CC=gcc
+CFLAGS+=-m64 -g -no-pie -z norelro
 
 .PHONY: all binary clean
 
-all: binary challenge.zip server.zip
+all: prints prints_easy
 
-binary:
-	$(CC) $(CFLAGS) -o prints prints.c
+prints: prints.c
+	$(CC) $(CFLAGS) -o $@ $^
 
-challenge.zip: binary
-	zip challenge.zip prints
 
-server.zip: binary
-	echo prints > requires-server
-	zip server.zip prints requires-server flag.txt
+prints_easy: CFLAGS+=-DFLAG_LEAK
+prints_easy: prints.c
+	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
-	rm -f prints challenge.zip server.zip requires-server
+	rm -f prints prints_easy
 
